@@ -1,0 +1,65 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: ry-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 7894561230
+      MYSQL_DATABASE: ry-vue
+      TZ: Asia/Shanghai
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql/ry_20260417.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake --default-time-zone=+8:00
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p7894561230"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: ry-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ruoyi-admin:
+    build: .
+    container_name: ry-admin
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=druid,docker
+      - SPRING_DATA_REDIS_HOST=redis
+      - TZ=Asia/Shanghai
+    ports:
+      - "8080:8080"
+
+  ruoyi-ui:
+    build: ./RuoYi-Vue3-typescript
+    container_name: ry-ui
+    restart: unless-stopped
+    depends_on:
+      - ruoyi-admin
+    ports:
+      - "80:80"
+
+volumes:
+  mysql-data:
+  redis-data:

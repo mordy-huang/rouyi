@@ -1,0 +1,11 @@
+.git
+.gitignore
+.github
+*.md
+target/
+ruoyi-ui/node_modules/
+ruoyi-ui/dist/
+ruoyi-ui/.git
+ruoyi-ui/README.md
+doc/
+bin/
