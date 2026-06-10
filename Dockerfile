@@ -1,10 +1,5 @@
-FROM maven:3.9-eclipse-temurin-17 AS build
-WORKDIR /build
-COPY . .
-RUN mvn clean package -DskipTests -B
-
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=build /build/ruoyi-admin/target/ruoyi-admin.jar app.jar
+COPY ruoyi-admin/target/ruoyi-admin.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

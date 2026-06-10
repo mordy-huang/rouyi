@@ -1,0 +1,41 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 7894561230
+      MYSQL_DATABASE: ry-vue
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+
+  admin:
+    image: ruoyi-vue-master-ruoyi-admin:latest
+    container_name: admin
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - SPRING_PROFILES_ACTIVE=druid,docker
+      - SPRING_DATA_REDIS_HOST=redis
+    ports:
+      - "8080:8080"
+
+  ui:
+    image: ruoyi-vue-master-ruoyi-ui:latest
+    container_name: ui
+    restart: unless-stopped
+    depends_on:
+      - admin
+    ports:
+      - "80:80"
