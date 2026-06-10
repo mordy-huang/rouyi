@@ -35,7 +35,7 @@ services:
       timeout: 5s
       retries: 5
 
-  ruoyi-admin:
+  admin:
     image: ruoyi-vue-master-ruoyi-admin:latest
     build: .
     container_name: ry-admin
@@ -52,13 +52,13 @@ services:
     ports:
       - "8080:8080"
 
-  ruoyi-ui:
+  ui:
     image: ruoyi-vue-master-ruoyi-ui:latest
     build: ./RuoYi-Vue3-typescript
     container_name: ry-ui
     restart: unless-stopped
     depends_on:
-      - ruoyi-admin
+      - admin
     ports:
       - "80:80"
 
