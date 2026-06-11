@@ -3,7 +3,6 @@ package com.ruoyi.framework.interceptor;
 import java.lang.reflect.Method;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import com.alibaba.fastjson2.JSON;
@@ -16,7 +15,6 @@ import com.ruoyi.common.utils.ServletUtils;
  *
  * @author ruoyi
  */
-@Component
 public abstract class RepeatSubmitInterceptor implements HandlerInterceptor
 {
     @Override

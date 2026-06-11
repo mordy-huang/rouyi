@@ -13,7 +13,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./sql/ry_20260417.sql:/docker-entrypoint-initdb.d/init.sql
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake --default-time-zone=+8:00
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake --default-time-zone=+8:00 --innodb-buffer-pool-size=64M --performance-schema=0
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p7894561230"]
       interval: 10s
@@ -48,6 +48,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=druid,docker
       - SPRING_DATA_REDIS_HOST=redis
+      - JAVA_TOOL_OPTIONS=-Xms128m -Xmx256m
       - TZ=Asia/Shanghai
     ports:
       - "8080:8080"
